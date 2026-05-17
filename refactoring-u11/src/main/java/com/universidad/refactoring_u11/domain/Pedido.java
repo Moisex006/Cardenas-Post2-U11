@@ -17,9 +17,17 @@ public class Pedido {
     private String clienteNombre;
     private Double total;
 
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
     public Pedido(Long clienteId, String clienteNombre, Double total) {
         this.clienteId = clienteId;
         this.clienteNombre = clienteNombre;
         this.total = total;
     }
+
 }
