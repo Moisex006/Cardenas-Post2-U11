@@ -1,32 +1,33 @@
 package com.universidad.refactoring_u11.service;
 
 import com.universidad.refactoring_u11.domain.Pedido;
+import com.universidad.refactoring_u11.strategy.EstrategiaEnvio;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EnvioService {
 
+    private final Map<String,
+            EstrategiaEnvio> estrategias;
+
+    public EnvioService(
+            Map<String,
+                    EstrategiaEnvio> estrategias) {
+
+        this.estrategias = estrategias;
+    }
+
     public double calcularEnvio(
             Pedido pedido,
-            String tipoEnvio) {
+            String tipo) {
 
-        switch (tipoEnvio) {
-
-            case "ESTANDAR":
-                return pedido.getTotal() > 50 ? 0 : 5.99;
-
-            case "EXPRESS":
-                return 12.99;
-
-            case "MISMO_DIA":
-                return 24.99;
-
-            case "GRATIS":
-                return 0;
-
-            default:
-                throw new IllegalArgumentException(
-                        "Tipo desconocido");
-        }
+        return Optional.ofNullable(
+                        estrategias.get(tipo))
+                .orElseThrow(() ->
+                        new IllegalArgumentException(tipo))
+                .calcularCosto(pedido);
     }
 }
